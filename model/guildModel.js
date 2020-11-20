@@ -1,4 +1,4 @@
-import db from '../helper/databaseConnection.js';
+import db from '../service/databaseConnection.js';
 
 const { Schema } = db;
 
@@ -7,6 +7,10 @@ const guildSchema = new Schema({
     type: String,
     required: true,
   },
+  region: {
+    type: String,
+    required: true,
+  }, 
   state: {
     type: Boolean,
     required: true,
