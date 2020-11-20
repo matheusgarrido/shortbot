@@ -12,8 +12,13 @@ const client = new Discord.Client();
 const { BOT_TOKEN } = process.env;
 
 client.on('ready', () => {
+  //Log de start
   const { username, id } = client.user;
   console.log(`Bot ${username} (#${id}) iniciado!`);
+  //Status
+  client.user.setActivity("\"..help\" for support", {
+    type: "PLAYING",
+  });
   /*
   EVENT DATA
     id: '722159579215036458',
