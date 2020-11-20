@@ -1,0 +1,5 @@
+#Módulos
+node_modules/
+
+#Variáveis de desenvolvimento
+.env
