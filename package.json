@@ -4,13 +4,17 @@
   "description": "Discord bot to create shortcut texts",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon index.js",
+    "start": "node index.js"
   },
   "author": "Matheus Garrido Dias",
   "license": "ISC",
   "dependencies": {
     "devenv": "^1.0.1",
     "discord": "^0.8.2",
-    "mongoose": "^5.10.15"
-  }
+    "mongoose": "^5.10.15",
+    "nodemon": "^2.0.6"
+  },
+  "type": "module"
 }
