@@ -11,8 +11,8 @@
   "author": "Matheus Garrido Dias",
   "license": "ISC",
   "dependencies": {
-    "devenv": "^1.0.1",
-    "discord": "^0.8.2",
+    "discord.js": "^12.4.1",
+    "dotenv": "^8.2.0",
     "mongoose": "^5.10.15",
     "nodemon": "^2.0.6"
   },
