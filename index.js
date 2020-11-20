@@ -1,6 +1,6 @@
 import Discord from 'discord.js';
 import dotenv from 'dotenv';
-// import readMessage from './routes/readMessage.js';
+import readMessage from './routes/readMessage.js';
 import joinedServer from './routes/joinedGuild.js';
 import ejectedServer from './routes/ejectedGuild.js';
 
@@ -30,8 +30,8 @@ client.on('guildDelete', (event) => {
   ejectedServer(client, event);
 });
 
-// client.on('message', (message) => {
-//   readMessage(client, message);
-// });
+client.on('message', (message) => {
+  readMessage(client, message);
+});
 
 client.login(BOT_TOKEN);
