@@ -10,7 +10,9 @@ async function executeShortcut(event, message) {
   const content = await contentService.getContentByName(id, message);
 
   if (content) {
+    event.react("✅");
     const { value, type } = content;
+    // prettier-ignore
     switch (type) {
       //If is text
       case "text":
@@ -24,6 +26,7 @@ async function executeShortcut(event, message) {
         break;
     }
   } else {
+    event.react("❌");
     event.channel.send(notFound);
   }
 }
