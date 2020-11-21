@@ -4,6 +4,8 @@ import readMessage from './routes/readMessage.js';
 import joinedServer from './routes/joinedGuild.js';
 import ejectedServer from './routes/ejectedGuild.js';
 
+// import * as messageService from './service/messageService.js';
+
 //Configs
 dotenv.config();
 
@@ -16,9 +18,10 @@ client.on('ready', () => {
   const { username, id } = client.user;
   console.log(`Bot ${username} (#${id}) iniciado!`);
   //Status
-  client.user.setActivity("\"..help\" for support", {
-    type: "PLAYING",
+  client.user.setActivity('"..help" for support', {
+    type: 'PLAYING',
   });
+  // messageService.setMessages();
   /*
   EVENT DATA
     id: '722159579215036458',

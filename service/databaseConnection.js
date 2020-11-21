@@ -11,6 +11,7 @@ const { URL_DB } = process.env;
 mongoose.connect(URL_DB, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  useFindAndModify: false,
 });
 
 export default mongoose;
