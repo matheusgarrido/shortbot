@@ -1,41 +1,35 @@
-import contentModel from '../model/contentModel.js';
+import contentModel from "../model/contentModel.js";
 
 const c = {
-  idUser: '252440678955483138',
-  idGuild: '722159579215036458',
-  name: 'Teste',
-  type: 'text',
-  value: '/tts teste',
-  privacity: 'private',
+  idUser: "252440678955483138",
+  idGuild: "722159579215036458",
+  name: "Teste",
+  type: "text",
+  value: "/tts teste",
+  privacity: "private",
 };
 
 const c2 = {
-  idUser: '252440678955483138',
-  idGuild: '722159579215036458',
-  name: 'Teste2',
-  type: 'text',
-  value: '/tts teste2',
-  privacity: 'private',
+  idUser: "252440678955483138",
+  idGuild: "722159579215036458",
+  name: "Teste2",
+  type: "text",
+  value: "/tts teste2",
+  privacity: "private",
 };
 
 async function getContentByGuildId(guildId) {
-  const typesInGuild = await contentModel.distinct('type', {
+  const typesInGuild = await contentModel.distinct("type", {
     idGuild: guildId,
   });
-  //Not updating array
-  let arrayContent = [];
-  await typesInGuild.forEach(async (element) => {
+  const arrayContent = [];
+  for (const type of typesInGuild) {
     const content = await contentModel
-      .find({ idGuild: guildId, type: element })
+      .find({ idGuild: guildId, type })
       .sort({ name: 1 });
-    arrayContent.push(content);
-  });
-
-  console.log(arrayContent);
-  // const content = await contentModel
-  //   .find({ idGuild: guildId })
-  //   .sort({ type: 1 });
-  // return content;
+    arrayContent.push({ type, shortcuts: content });
+  }
+  return arrayContent;
 }
 
 async function createContent(dataContent) {
