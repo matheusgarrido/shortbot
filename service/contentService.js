@@ -18,22 +18,29 @@ const c2 = {
   privacity: "private",
 };
 
-async function getContentByGuildId(guildId, typeName) {
+async function getContentByGuildId(idGuild, typeName) {
   const conditionFind = typeName
     ? {
-        idGuild: guildId,
+        idGuild,
         type: typeName,
       }
-    : { idGuild: guildId };
+    : { idGuild };
   const typesInGuild = await contentModel.distinct("type", conditionFind);
   const arrayContent = [];
   for (const type of typesInGuild) {
     const content = await contentModel
-      .find({ idGuild: guildId, type })
+      .find({ idGuild, type })
       .sort({ name: 1 });
     arrayContent.push({ type, shortcuts: content });
   }
   return arrayContent;
+}
+async function getContentByName(idGuild, name) {
+  const content = await contentModel.findOne({
+    idGuild,
+    name: { $regex: name, $options: "si" },
+  });
+  return content;
 }
 
 async function createContent(dataContent) {
@@ -44,4 +51,4 @@ async function createContent(dataContent) {
 // createContent(c);
 // createContent(c2);
 
-export { getContentByGuildId, createContent };
+export { getContentByGuildId, getContentByName, createContent };

@@ -1,6 +1,7 @@
 import * as guildService from "../service/guildService.js";
 import helpCommand from "../helper/helpCommand.js";
 import listCommand from "../helper/listCommand.js";
+import executeShortcut from "../helper/executeShortcut.js";
 
 async function readMessage(client, event) {
   const { content } = event;
@@ -33,6 +34,7 @@ async function readMessage(client, event) {
         break;
       default:
         //Search a shortcut in DB
+        executeShortcut(event, message);
         break;
     }
     //Try update region if necessary

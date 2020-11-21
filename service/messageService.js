@@ -14,6 +14,9 @@ const json = {
     },
   ],
   messages: {
+    content: {
+      notFound: "Nenhum atalho encontrado.",
+    },
     list: {
       title: "Atalhos salvos na Guilda",
     },

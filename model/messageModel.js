@@ -27,6 +27,13 @@ const messageSchema = new Schema({
   ],
   messages: {
     type: Object,
+    content: {
+      type: Object,
+      notFound: {
+        type: String,
+        required: true,
+      },
+    },
     list: {
       type: Object,
       title: {
