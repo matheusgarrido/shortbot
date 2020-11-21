@@ -18,10 +18,14 @@ const c2 = {
   privacity: "private",
 };
 
-async function getContentByGuildId(guildId) {
-  const typesInGuild = await contentModel.distinct("type", {
-    idGuild: guildId,
-  });
+async function getContentByGuildId(guildId, typeName) {
+  const conditionFind = typeName
+    ? {
+        idGuild: guildId,
+        type: typeName,
+      }
+    : { idGuild: guildId };
+  const typesInGuild = await contentModel.distinct("type", conditionFind);
   const arrayContent = [];
   for (const type of typesInGuild) {
     const content = await contentModel

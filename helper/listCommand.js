@@ -6,6 +6,11 @@ function getTypeName(typeName, list) {
     if (type.name === typeName) return type.value;
   }
 }
+function checkTypeExists(typeName, list) {
+  for (const type of list) {
+    if (type.name === typeName) return true;
+  }
+}
 
 async function listCommand(event, message) {
   //Get list messages
@@ -16,9 +21,13 @@ async function listCommand(event, message) {
   const { title } = language.messages.list;
   const typeListName = language.contentType;
 
-  //Get guild content
+  //Get guild content and filter by type if user required a real type name
   const { id, name } = event.guild;
-  const content = await contentService.getContentByGuildId(id);
+  const typeWrited = message.split(" ")[1];
+  const typeToSearch = checkTypeExists(typeWrited, typeListName)
+    ? typeWrited
+    : null;
+  const content = await contentService.getContentByGuildId(id, typeToSearch);
 
   //Formatting message to send
   const jsonMessage = {
@@ -28,7 +37,6 @@ async function listCommand(event, message) {
       fields: [],
     },
   };
-
   content.forEach((contentsByType) => {
     let textToValueJson = "";
     for (const shortcut of contentsByType.shortcuts) {
@@ -43,6 +51,5 @@ async function listCommand(event, message) {
     });
   });
   event.channel.send(jsonMessage);
-  console.log(content);
 }
 export default listCommand;
