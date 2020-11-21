@@ -10,6 +10,9 @@ const json = {
         list: 'Lista todos os atalhos criados pelos usuários do servidor.',
         create: 'Cria um novo atalho.',
         update: 'Gerenciamento de atalho (atualização ou exclusão).',
+        shortcutExample: 'nome do atalho',
+        shortcut:
+          'Basta substuituir a frase destacada pelo nome do atalho para usá-lo.',
       },
     },
   },

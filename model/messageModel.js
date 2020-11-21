@@ -33,6 +33,14 @@ const messageSchema = new Schema({
           type: String,
           required: true,
         },
+        shortcutExample: {
+          type: String,
+          required: true,
+        },
+        shortcut: {
+          type: String,
+          required: true,
+        },
       },
     },
   },

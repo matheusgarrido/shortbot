@@ -3,20 +3,20 @@ import messageModel from '../../model/messageModel.js';
 async function helpCommand(event) {
   //Discover language to get messages in DB
   const { region } = event.guild;
-
   let language = await messageModel.findOne({ countries: region });
 
-  if (!language) await messageModel.findOne({ countries: 'us' });
+  if (!language) language = await messageModel.findOne({ countries: 'europe' });
 
   //Help guide messages
   const { title, description } = language.messages.help;
-  const { list, create, update } = description;
+  const { list, create, update, shortcutExample, shortcut } = description;
 
   //String to send
   const messageToSend = `${title.toLocaleUpperCase()}
-  :new: **'..create'** - ${create}
-  :page_facing_up: **'..list'** -  ${list}
-  :pencil: **'..update'** - ${update}`;
+:new: **'..create'** - ${create}
+:page_facing_up: **'..list'** -  ${list}
+:pencil: **'..update'** - ${update}
+:arrow_forward: **'..__${shortcutExample}__'** - ${shortcut}`;
 
   //Message sended
   event.channel.send(messageToSend);
