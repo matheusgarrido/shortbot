@@ -1,5 +1,6 @@
 import * as guildService from '../service/guildService.js';
-import helpCommand from '../helper/commands/helpCommand.js';
+import helpCommand from '../helper/helpCommand.js';
+import listCommand from '../helper/listCommand.js';
 
 async function readMessage(client, event) {
   const { content } = event;
@@ -15,13 +16,14 @@ async function readMessage(client, event) {
   ) {
     const message = content.substr(2).trim();
     const command = message.split(' ')[0];
-    switch (command) {
+    switch (command.toLowerCase()) {
       case 'help':
         //List all help functions
         helpCommand(event);
         break;
       case 'list':
         //List all shortcuts
+        listCommand(event);
         break;
       case 'create':
         //Create a new shortcut

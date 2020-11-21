@@ -36,8 +36,8 @@ const allRegions = [
 ];
 
 async function getMessagesByRegion(region) {
-  // const guild = await guildModel.findOne({ _id: guildId });
-  // return guild;
+  let language = await messageModel.findOne({ countries: region });
+  return language;
 }
 
 async function setMessages() {
@@ -45,4 +45,4 @@ async function setMessages() {
   message.save();
 }
 
-export { setMessages };
+export { getMessagesByRegion, setMessages };
