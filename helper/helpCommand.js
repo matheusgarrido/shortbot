@@ -1,10 +1,9 @@
-import * as messageService from '../service/messageService.js';
+import * as messageService from "../service/messageService.js";
 
 async function helpCommand(event) {
   //Discover language to get messages in DB
   const { region } = event.guild;
   let language = await messageService.getMessagesByRegion(region);
-  if (!language) language = await messageService.getMessagesByRegion('europe');
 
   //Help guide messages
   const { title, description } = language.messages.help;

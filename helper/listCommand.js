@@ -1,25 +1,44 @@
 import * as contentService from "../service/contentService.js";
+import * as messageService from "../service/messageService.js";
 
-async function listCommand(event) {
+function getTypeName(typeName, list) {
+  for (const type of list) {
+    if (type.name === typeName) return type.value;
+  }
+}
+
+async function listCommand(event, message) {
+  //Get list messages
+  const { region } = event.guild;
+  let language = await messageService.getMessagesByRegion(region);
+
+  //Get title and types in idiom of region
+  const { title } = language.messages.list;
+  const typeListName = language.contentType;
+
+  //Get guild content
   const { id, name } = event.guild;
   const content = await contentService.getContentByGuildId(id);
-  let text = "";
+
+  //Formatting message to send
   const jsonMessage = {
     embed: {
       color: 3447003,
-      title: `Atalhos da Guilda (${name})`,
+      title: `${title} (${name})`,
       fields: [],
     },
   };
+
   content.forEach((contentsByType) => {
-    let message = "";
+    let textToValueJson = "";
     for (const shortcut of contentsByType.shortcuts) {
       const { idUser, idGuild, name, type, value, privacity } = shortcut;
-      message += `__${name}__ = ${value}\n`;
+      if (type === "text") textToValueJson += `__${name}__ = ${value}\n`;
+      else textToValueJson += `__${name}__\n`;
     }
     jsonMessage.embed.fields.push({
-      name: contentsByType.type.toUpperCase(),
-      value: message,
+      name: getTypeName(contentsByType.type, typeListName).toUpperCase(),
+      value: textToValueJson,
       inline: true,
     });
   });
