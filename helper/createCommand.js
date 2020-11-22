@@ -49,7 +49,7 @@ async function setNewShortcutValue(event, message) {
   else {
     event.react('✅');
     await contentService.setValueById(id, value);
-    event.channel.send(`**__..${name}__** ${createSuccess}`);
+    event.channel.send(`**..${name}** ${createSuccess}`);
   }
 }
 

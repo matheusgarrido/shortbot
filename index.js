@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import readMessage from './routes/readMessage.js';
 import joinedServer from './routes/joinedGuild.js';
 import ejectedServer from './routes/ejectedGuild.js';
+import reactMessage from './routes/reactMessage.js';
 
 // import * as messageService from './service/messageService.js';
 
@@ -31,15 +32,24 @@ client.on('ready', () => {
   */
 });
 
+//When the bot entered in a guild
 client.on('guildCreate', (event) => {
   joinedServer(client, event);
 });
+
+//When the bot is ejected by guild
 client.on('guildDelete', (event) => {
   ejectedServer(client, event);
 });
 
+//When someone text
 client.on('message', (message) => {
   readMessage(client, message);
+});
+
+//When someone react
+client.on('messageReactionAdd', (event, user) => {
+  reactMessage(client, event, user);
 });
 
 client.login(BOT_TOKEN);

@@ -17,6 +17,8 @@ const json = {
     crud: {
       reserved:
         'Você não pode utilizar esta palavra para salvar no atalho porque eu já uso ela para executar funções.',
+      selectOption:
+        'Selecione a opção para atualizar o atalho ou cancele com **..cancel**',
       cancelCreate: 'Criação de atalho cancelada',
       cancelUpdate: 'Atualização de atalho cancelada',
       cancelFalse:
@@ -28,6 +30,14 @@ const json = {
       invalidValue:
         'Informe um valor para o atalho (para cancelar a criação digite ..cancel)',
       createSuccess: 'criado com sucesso!',
+      shortcutFound:
+        'Atalho não encontrado.\nDigite ..list para visualizar a lista de atalhos.',
+      shortcutNotFound:
+        'Atalho não encontrado.\nDigite ..list para visualizar a lista de atalhos.',
+      updateCardTitle: 'Atualizar',
+      updateCardText: ':one: para alterar nome\n:two: para alterar valor',
+      deleteCardTitle: 'Excluir',
+      deleteCardText: ':x: para excluir o atalho',
     },
     content: {
       notFound: 'Nenhum atalho encontrado.',

@@ -1,8 +1,10 @@
 import * as guildService from '../service/guildService.js';
 import * as messageService from '../service/messageService.js';
+import * as contentService from '../service/contentService.js';
 import helpCommand from '../helper/helpCommand.js';
 import listCommand from '../helper/listCommand.js';
 import { createCommand, setNewShortcutValue } from '../helper/createCommand.js';
+import { startUpdate, updateShortcutValue } from '../helper/updateCommand.js';
 import executeShortcut from '../helper/executeShortcut.js';
 
 async function readMessage(client, event) {
@@ -34,6 +36,7 @@ async function readMessage(client, event) {
     let language = await messageService.getMessagesByRegion(region);
     const {
       reserved,
+      selectOption,
       cancelUpdate,
       cancelCreate,
       cancelFalse,
@@ -55,6 +58,7 @@ async function readMessage(client, event) {
           createCommand(event, message);
           break;
         case 'update':
+          startUpdate(event, message);
           //Update an exist shortcut or delete it
           break;
         case 'cancel':
@@ -71,8 +75,12 @@ async function readMessage(client, event) {
         case 'list':
         case 'create':
         case 'update':
+          //If is in update select option menu
+          if (['selectoption'].includes(stateCommand[1])) {
+            event.channel.send(selectOption);
+          }
           //If is the shortcut value
-          if (['value'].includes(stateCommand[1])) {
+          else if (['value'].includes(stateCommand[1])) {
             //Get value to finish creating or update an existing shortcut
             stateCommand[0] === 'create'
               ? setNewShortcutValue(event, message)
@@ -82,10 +90,16 @@ async function readMessage(client, event) {
           else event.channel.send(reserved);
           break;
         case 'cancel':
-          await guildService.cancelCreateOrUpdate(id);
-          const messageCancel =
-            stateCommand[0] === 'create' ? cancelCreate : cancelUpdate;
-          event.channel.send(messageCancel);
+          const guild = await guildService.setCurrentShortCut(id, false);
+          //Delete shortcut draft if is canceling in creation
+          if (stateCommand[0] === 'create') {
+            event.channel.send(cancelCreate);
+            await contentService.deleteContent(guild.currentShortcut.id);
+          }
+          //Just cancel if is in update
+          else {
+            event.channel.send(cancelUpdate);
+          }
           break;
         default:
           stateCommand[0] === 'create'

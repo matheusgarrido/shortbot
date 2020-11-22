@@ -45,26 +45,15 @@ async function setCurrentShortCut(
   if (onCreateOrUpdate) {
     const guild = await guildModel.findByIdAndUpdate(
       { _id: idGuild },
-      { 'currentShortcut.id': idShortcut, 'currentShortcut.state': state },
-      { new: true }
+      { 'currentShortcut.id': idShortcut, 'currentShortcut.state': state }
     );
     guild.save();
-  } else {
-    const guild = await guildModel.findByIdAndUpdate(
-      { _id: idGuild },
-      { currentShortcut: {} },
-      { new: true }
-    );
-    guild.save();
+    return guild;
   }
-}
-async function cancelCreateOrUpdate(idGuild) {
   const guild = await guildModel.findByIdAndUpdate(
     { _id: idGuild },
     { currentShortcut: {} }
   );
-  const { id: idContent } = guild.currentShortcut;
-  await contentService.deleteContent(idContent);
   guild.save();
   return guild;
 }
@@ -85,6 +74,5 @@ export {
   setEjected,
   setRegion,
   setCurrentShortCut,
-  cancelCreateOrUpdate,
   isOnCreateOrUpdate,
 };

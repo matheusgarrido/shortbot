@@ -33,6 +33,10 @@ const messageSchema = new Schema({
         type: String,
         required: true,
       },
+      selectOption: {
+        type: String,
+        required: true,
+      },
       cancelCreate: {
         type: String,
         required: true,
@@ -62,6 +66,30 @@ const messageSchema = new Schema({
         required: true,
       },
       createSuccess: {
+        type: String,
+        required: true,
+      },
+      shortcutFound: {
+        type: String,
+        required: true,
+      },
+      shortcutNotFound: {
+        type: String,
+        required: true,
+      },
+      updateCardTitle: {
+        type: String,
+        required: true,
+      },
+      updateCardText: {
+        type: String,
+        required: true,
+      },
+      deleteCardTitle: {
+        type: String,
+        required: true,
+      },
+      deleteCardText: {
         type: String,
         required: true,
       },
