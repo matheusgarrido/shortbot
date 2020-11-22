@@ -1,4 +1,4 @@
-import db from '../service/databaseConnection.js';
+import db from "../service/databaseConnection.js";
 
 const { Schema } = db;
 
@@ -10,14 +10,23 @@ const guildSchema = new Schema({
   region: {
     type: String,
     required: true,
-  }, 
+  },
   state: {
     type: Boolean,
     required: true,
     default: true,
   },
+  currentShortcut: {
+    type: Object,
+    id: {
+      type: String,
+    },
+    state: {
+      type: String,
+    },
+  },
 });
 
-const guildModel = db.model('guild', guildSchema, 'guild');
+const guildModel = db.model("guild", guildSchema, "guild");
 
 export default guildModel;

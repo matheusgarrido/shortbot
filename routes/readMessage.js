@@ -1,6 +1,7 @@
 import * as guildService from "../service/guildService.js";
 import helpCommand from "../helper/helpCommand.js";
 import listCommand from "../helper/listCommand.js";
+import { createCommand } from "../helper/createCommand.js";
 import executeShortcut from "../helper/executeShortcut.js";
 
 async function readMessage(client, event) {
@@ -13,7 +14,10 @@ async function readMessage(client, event) {
   if (
     contentSplitted.length > 1 &&
     !contentSplitted[0] &&
-    contentSplitted[1].charAt(0).match(/^[a-z\u00E0-\u00FC]+$/i)
+    contentSplitted[1]
+      .trim()
+      .charAt(0)
+      .match(/^[a-z\u00E0-\u00FC]+$/i)
   ) {
     const message = content.substr(2).trim();
     const command = message.split(" ")[0];
@@ -28,6 +32,7 @@ async function readMessage(client, event) {
         break;
       case "create":
         //Create a new shortcut
+        createCommand(event, message);
         break;
       case "update":
         //Update an exist shortcut or delete it
