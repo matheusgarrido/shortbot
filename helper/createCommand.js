@@ -5,7 +5,7 @@ import * as guildService from '../service/guildService.js';
 async function setName(event, message) {
   const { id: idGuild, region } = event.guild;
   let language = await messageService.getMessagesByRegion(region);
-  const { nameExisting, nameInvalid } = language.messages.crud;
+  const { nameExisting, nameInvalid, createName } = language.messages.crud;
 
   //Get name
   const name = message.replace('create', '').trim();
@@ -24,15 +24,14 @@ async function setName(event, message) {
   else {
     event.react('✅');
     await contentService.createContent(idGuild, name);
-    event.channel.send(
-      `Informe o valor do atalho __..${name}__. Digite __..__ antes do valor, exemplo __..teste..__`
-    );
+    event.channel.send(createName);
   }
 }
 
 async function setNewShortcutValue(event, message) {
   const { id: idGuild, region } = event.guild;
   let language = await messageService.getMessagesByRegion(region);
+  const { invalidValue, createSuccess } = language.messages.crud;
 
   const guild = await guildService.getGuild(idGuild);
   const { id } = guild.currentShortcut;
@@ -44,13 +43,13 @@ async function setNewShortcutValue(event, message) {
   //If value is empty
   if (value === '') {
     event.react('❌');
-    event.channel.send('Valor inválido');
+    event.channel.send(invalidValue);
   }
   //If it's a shorcut with different name from others on guild
   else {
     event.react('✅');
     await contentService.setValueById(id, value);
-    event.channel.send(`**__..${name}__** criado com sucesso.`);
+    event.channel.send(`**__..${name}__** ${createSuccess}`);
   }
 }
 

@@ -53,6 +53,18 @@ const messageSchema = new Schema({
         type: String,
         required: true,
       },
+      createName: {
+        type: String,
+        required: true,
+      },
+      invalidValue: {
+        type: String,
+        required: true,
+      },
+      createSuccess: {
+        type: String,
+        required: true,
+      },
     },
     content: {
       type: Object,
@@ -64,6 +76,14 @@ const messageSchema = new Schema({
     list: {
       type: Object,
       title: {
+        type: String,
+        required: true,
+      },
+      emptyTitle: {
+        type: String,
+        required: true,
+      },
+      emptyMessage: {
         type: String,
         required: true,
       },

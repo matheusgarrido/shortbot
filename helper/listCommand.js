@@ -18,7 +18,7 @@ async function listCommand(event, message) {
   let language = await messageService.getMessagesByRegion(region);
 
   //Get title and types in idiom of region
-  const { title } = language.messages.list;
+  const { title, emptyTitle, emptyMessage } = language.messages.list;
   const typeListName = language.contentType;
 
   //Get guild content and filter by type if user required a real type name
@@ -37,14 +37,18 @@ async function listCommand(event, message) {
       fields: [],
     },
   };
-  console.log(content);
+  //If guild hasn't shortcut
   if (content.length === 0) {
+    event.react('❌');
     jsonMessage.embed.fields.push({
-      name: 'Não há atalhos salvos',
-      value: 'Utilize o comando **__..create__** para criar um atalho.',
+      name: emptyTitle,
+      value: emptyMessage,
       inline: true,
     });
-  } else {
+  }
+  //List all shortcut filtered by type
+  else {
+    event.react('✅');
     content.forEach((contentsByType) => {
       let textToValueJson = '';
       for (const shortcut of contentsByType.shortcuts) {

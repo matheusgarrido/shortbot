@@ -23,12 +23,19 @@ const json = {
         'Nenhum atalho está sendo criado ou alterado no momento para cancelar uma ação.',
       nameExisting: 'Já existe um atalho com este nome.',
       nameInvalid: 'O nome informado é inválido.',
+      createName:
+        'Informe o valor do atalho, **digitando __..__ antes do valor** (exemplo: __..teste__)\nPara cancelar a criação digite ..cancel',
+      invalidValue:
+        'Informe um valor para o atalho (para cancelar a criação digite ..cancel)',
+      createSuccess: 'criado com sucesso!',
     },
     content: {
       notFound: 'Nenhum atalho encontrado.',
     },
     list: {
       title: 'Atalhos salvos na Guilda',
+      emptyTitle: 'Não há atalhos salvos',
+      emptyMessage: 'Utilize o comando **__..create__** para criar um atalho.',
     },
     help: {
       title: 'Guia de Comandos',
@@ -38,7 +45,7 @@ const json = {
         update: 'Gerenciamento de atalho (atualização ou exclusão).',
         shortcutExample: 'nome do atalho',
         shortcut:
-          'Basta substuituir a frase destacada pelo nome do atalho para usá-lo.',
+          'Basta substituir a frase destacada pelo nome do atalho para usá-lo.',
       },
     },
   },
