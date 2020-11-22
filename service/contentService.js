@@ -52,7 +52,11 @@ async function createContent(idGuild, name) {
   return content;
 }
 
+async function deleteContent(id) {
+  await contentModel.findByIdAndDelete(id);
+}
+
 // createContent(c);
 // createContent(c2);
 
-export { getContentByGuildId, getContentByName, createContent };
+export { getContentByGuildId, getContentByName, createContent, deleteContent };

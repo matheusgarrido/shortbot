@@ -1,4 +1,5 @@
 import guildModel from '../model/guildModel.js';
+import * as contentService from '../service/contentService.js';
 
 async function getGuild(guildId) {
   const guild = await guildModel.findById({ _id: guildId });
@@ -54,6 +55,16 @@ async function setCurrentShortCut(
     guild.save();
   }
 }
+async function cancelCreateOrUpdate(idGuild) {
+  const guild = await guildModel.findByIdAndUpdate(
+    { _id: idGuild },
+    { currentShortcut: {} }
+  );
+  const { id: idContent } = guild.currentShortcut;
+  await contentService.deleteContent(idContent);
+  guild.save();
+  return guild;
+}
 
 async function isOnCreateOrUpdate(idGuild) {
   const guild = await guildModel.findOne(
@@ -71,5 +82,6 @@ export {
   setEjected,
   setRegion,
   setCurrentShortCut,
+  cancelCreateOrUpdate,
   isOnCreateOrUpdate,
 };

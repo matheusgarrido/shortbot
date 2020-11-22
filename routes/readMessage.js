@@ -68,8 +68,12 @@ async function readMessage(client, event) {
           event.channel.send(reserved);
           break;
         case 'cancel':
-          event.channel.send(cancelCreate);
-          event.channel.send(cancelUpdate);
+          const canceledGuild = await guildService.cancelCreateOrUpdate(id);
+          const { state } = canceledGuild.currentShortcut;
+          const stateCommand = state.split('_', 1)[0];
+          const messageCancel =
+            stateCommand === 'create' ? cancelCreate : cancelUpdate;
+          event.channel.send(messageCancel);
           break;
       }
     }
