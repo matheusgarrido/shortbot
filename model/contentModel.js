@@ -3,10 +3,6 @@ import db from '../service/databaseConnection.js';
 const { Schema } = db;
 
 const contentSchema = new Schema({
-  idUser: {
-    type: String,
-    required: true,
-  },
   idGuild: {
     type: String,
     required: true,
@@ -22,7 +18,6 @@ const contentSchema = new Schema({
   },
   value: {
     type: String,
-    required: true,
   },
   privacity: {
     type: String,

@@ -1,4 +1,4 @@
-import db from "../service/databaseConnection.js";
+import db from '../service/databaseConnection.js';
 
 const { Schema } = db;
 
@@ -27,6 +27,33 @@ const messageSchema = new Schema({
   ],
   messages: {
     type: Object,
+    crud: {
+      type: Object,
+      reserved: {
+        type: String,
+        required: true,
+      },
+      cancelCreate: {
+        type: String,
+        required: true,
+      },
+      cancelUpdate: {
+        type: String,
+        required: true,
+      },
+      cancelFalse: {
+        type: String,
+        required: true,
+      },
+      nameExisting: {
+        type: String,
+        required: true,
+      },
+      nameInvalid: {
+        type: String,
+        required: true,
+      },
+    },
     content: {
       type: Object,
       notFound: {
@@ -73,6 +100,6 @@ const messageSchema = new Schema({
   },
 });
 
-const messageModel = db.model("message", messageSchema, "message");
+const messageModel = db.model('message', messageSchema, 'message');
 
 export default messageModel;

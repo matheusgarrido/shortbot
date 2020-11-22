@@ -1,21 +1,22 @@
-import contentModel from "../model/contentModel.js";
+import contentModel from '../model/contentModel.js';
+import * as guildService from '../service/guildService.js';
 
 const c = {
-  idUser: "252440678955483138",
-  idGuild: "722159579215036458",
-  name: "Teste",
-  type: "text",
-  value: "/tts teste",
-  privacity: "private",
+  idUser: '252440678955483138',
+  idGuild: '722159579215036458',
+  name: 'Teste',
+  type: 'text',
+  value: '/tts teste',
+  privacity: 'private',
 };
 
 const c2 = {
-  idUser: "252440678955483138",
-  idGuild: "722159579215036458",
-  name: "Teste2",
-  type: "text",
-  value: "/tts teste2",
-  privacity: "private",
+  idUser: '252440678955483138',
+  idGuild: '722159579215036458',
+  name: 'Teste2',
+  type: 'text',
+  value: '/tts teste2',
+  privacity: 'private',
 };
 
 async function getContentByGuildId(idGuild, typeName) {
@@ -25,7 +26,7 @@ async function getContentByGuildId(idGuild, typeName) {
         type: typeName,
       }
     : { idGuild };
-  const typesInGuild = await contentModel.distinct("type", conditionFind);
+  const typesInGuild = await contentModel.distinct('type', conditionFind);
   const arrayContent = [];
   for (const type of typesInGuild) {
     const content = await contentModel
@@ -38,14 +39,17 @@ async function getContentByGuildId(idGuild, typeName) {
 async function getContentByName(idGuild, name) {
   const content = await contentModel.findOne({
     idGuild,
-    name: { $regex: name, $options: "si" },
+    name: { $regex: name, $options: 'si' },
   });
   return content;
 }
 
-async function createContent(dataContent) {
-  const content = await contentModel.create(dataContent);
+async function createContent(idGuild, name) {
+  const content = await contentModel.create({ idGuild, name });
   content.save();
+  const { _id } = content;
+  await guildService.setCurrentShortCut(idGuild, true, _id, 'create_value');
+  return content;
 }
 
 // createContent(c);

@@ -34,4 +34,42 @@ async function setRegion(guildId, region) {
   }
 }
 
-export { getGuild, setJoined, setRejoined, setEjected, setRegion };
+async function setCurrentShortCut(
+  idGuild,
+  onCreateOrUpdate,
+  idShortcut,
+  state
+) {
+  if (onCreateOrUpdate) {
+    const guild = await guildModel.findByIdAndUpdate(
+      { _id: idGuild },
+      { 'currentShortcut.id': idShortcut, 'currentShortcut.state': state }
+    );
+    guild.save();
+  } else {
+    const guild = await guildModel.findByIdAndUpdate(
+      { _id: idGuild },
+      { currentShortcut: {} }
+    );
+    guild.save();
+  }
+}
+
+async function isOnCreateOrUpdate(idGuild) {
+  const guild = await guildModel.findOne(
+    { _id: idGuild },
+    { currentShortcut: 1 }
+  );
+  if (guild.currentShortcut.id) return true;
+  return false;
+}
+
+export {
+  getGuild,
+  setJoined,
+  setRejoined,
+  setEjected,
+  setRegion,
+  setCurrentShortCut,
+  isOnCreateOrUpdate,
+};
