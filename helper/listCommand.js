@@ -1,5 +1,5 @@
-import * as contentService from "../service/contentService.js";
-import * as messageService from "../service/messageService.js";
+import * as contentService from '../service/contentService.js';
+import * as messageService from '../service/messageService.js';
 
 function getTypeName(typeName, list) {
   for (const type of list) {
@@ -23,7 +23,7 @@ async function listCommand(event, message) {
 
   //Get guild content and filter by type if user required a real type name
   const { id, name } = event.guild;
-  const typeWrited = message.split(" ")[1];
+  const typeWrited = message.split(' ')[1];
   const typeToSearch = checkTypeExists(typeWrited, typeListName)
     ? typeWrited
     : null;
@@ -37,19 +37,28 @@ async function listCommand(event, message) {
       fields: [],
     },
   };
-  content.forEach((contentsByType) => {
-    let textToValueJson = "";
-    for (const shortcut of contentsByType.shortcuts) {
-      const { idUser, idGuild, name, type, value, privacity } = shortcut;
-      if (type === "text") textToValueJson += `__${name}__ = ${value}\n`;
-      else textToValueJson += `__${name}__\n`;
-    }
+  console.log(content);
+  if (content.length === 0) {
     jsonMessage.embed.fields.push({
-      name: getTypeName(contentsByType.type, typeListName).toUpperCase(),
-      value: textToValueJson,
+      name: 'Não há atalhos salvos',
+      value: 'Utilize o comando **__..create__** para criar um atalho.',
       inline: true,
     });
-  });
+  } else {
+    content.forEach((contentsByType) => {
+      let textToValueJson = '';
+      for (const shortcut of contentsByType.shortcuts) {
+        const { idUser, idGuild, name, type, value, privacity } = shortcut;
+        if (type === 'text') textToValueJson += `__${name}__ = ${value}\n`;
+        else textToValueJson += `__${name}__\n`;
+      }
+      jsonMessage.embed.fields.push({
+        name: getTypeName(contentsByType.type, typeListName).toUpperCase(),
+        value: textToValueJson,
+        inline: true,
+      });
+    });
+  }
   event.channel.send(jsonMessage);
 }
 export default listCommand;
