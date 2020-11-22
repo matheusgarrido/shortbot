@@ -14,8 +14,12 @@ async function readMessage(client, event) {
   const { id, region } = event.guild;
 
   const guildData = await guildService.getGuild(id);
-  const { state } = guildData.currentShortcut;
-  const stateCommand = state ? state.split('_') : ['', ''];
+  // console.log(guildData.currentShortcut);
+  const state =
+    guildData.currentShortcut !== undefined
+      ? guildData.currentShortcut.state
+      : ' _ ';
+  const stateCommand = state.split('_');
   /* Do:
     If has content after the prefix
     If is blank before the prefix
@@ -41,13 +45,12 @@ async function readMessage(client, event) {
       cancelCreate,
       cancelFalse,
     } = language.messages.crud;
-
     //List all help functions
     if (command.toLowerCase() === 'help') {
       helpCommand(event);
     }
     //If nobody in guild is creating or updating a shortcut
-    else if (!(await guildService.isOnCreateOrUpdate(event.guild.id)))
+    else if (!(await guildService.isOnCreateOrUpdate(id)))
       switch (command.toLowerCase()) {
         case 'list':
           //List all shortcuts

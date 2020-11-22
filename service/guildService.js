@@ -59,11 +59,8 @@ async function setCurrentShortCut(
 }
 
 async function isOnCreateOrUpdate(idGuild) {
-  const guild = await guildModel.findOne(
-    { _id: idGuild },
-    { currentShortcut: 1 }
-  );
-  if (guild.currentShortcut.id) return true;
+  const guild = await guildModel.findById(idGuild);
+  if (guild.currentShortcut && guild.currentShortcut.id) return true;
   return false;
 }
 
