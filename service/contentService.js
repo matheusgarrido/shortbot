@@ -39,13 +39,25 @@ async function getContentByGuildId(idGuild, typeName) {
 async function getContentByName(idGuild, name) {
   const content = await contentModel.findOne({
     idGuild,
-    name: { $regex: name, $options: 'si' },
+    name: name.toLowerCase(),
   });
+  return content;
+}
+async function getContentById(id) {
+  const content = await contentModel.findById(id);
+  return content;
+}
+async function setValueById(id, value) {
+  const content = await contentModel.findByIdAndUpdate(id, { value });
+  await guildService.setCurrentShortCut(content.idGuild, false);
   return content;
 }
 
 async function createContent(idGuild, name) {
-  const content = await contentModel.create({ idGuild, name });
+  const content = await contentModel.create({
+    idGuild,
+    name: name.toLowerCase(),
+  });
   content.save();
   const { _id } = content;
   await guildService.setCurrentShortCut(idGuild, true, _id, 'create_value');
@@ -59,4 +71,11 @@ async function deleteContent(id) {
 // createContent(c);
 // createContent(c2);
 
-export { getContentByGuildId, getContentByName, createContent, deleteContent };
+export {
+  getContentByGuildId,
+  getContentByName,
+  getContentById,
+  createContent,
+  deleteContent,
+  setValueById,
+};

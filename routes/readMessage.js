@@ -2,12 +2,18 @@ import * as guildService from '../service/guildService.js';
 import * as messageService from '../service/messageService.js';
 import helpCommand from '../helper/helpCommand.js';
 import listCommand from '../helper/listCommand.js';
-import { createCommand } from '../helper/createCommand.js';
+import { createCommand, setNewShortcutValue } from '../helper/createCommand.js';
 import executeShortcut from '../helper/executeShortcut.js';
 
 async function readMessage(client, event) {
   const { content } = event;
   const contentSplitted = content.trim().split('..');
+
+  const { id, region } = event.guild;
+
+  const guildData = await guildService.getGuild(id);
+  const { state } = guildData.currentShortcut;
+  const stateCommand = state ? state.split('_') : ['', ''];
   /* Do:
     If has content after the prefix
     If is blank before the prefix
@@ -15,16 +21,16 @@ async function readMessage(client, event) {
   if (
     contentSplitted.length > 1 &&
     !contentSplitted[0] &&
-    contentSplitted[1]
+    (contentSplitted[1]
       .trim()
       .charAt(0)
-      .match(/^[a-z\u00E0-\u00FC]+$/i)
+      .match(/^[a-z\u00E0-\u00FC]+$/i) ||
+      ['value'].includes(stateCommand[1]))
   ) {
     const message = content.substr(2).trim();
     const command = message.split(' ')[0];
 
     //Get messages
-    const { id, region } = event.guild;
     let language = await messageService.getMessagesByRegion(region);
     const {
       reserved,
@@ -65,16 +71,26 @@ async function readMessage(client, event) {
         case 'list':
         case 'create':
         case 'update':
-          event.channel.send(reserved);
+          //If is the shortcut value
+          if (['value'].includes(stateCommand[1])) {
+            //Get value to finish creating or update an existing shortcut
+            stateCommand[0] === 'create'
+              ? setNewShortcutValue(event, message)
+              : console.log('EDIT');
+          }
+          //If is the name
+          else event.channel.send(reserved);
           break;
         case 'cancel':
-          const canceledGuild = await guildService.cancelCreateOrUpdate(id);
-          const { state } = canceledGuild.currentShortcut;
-          const stateCommand = state.split('_', 1)[0];
+          await guildService.cancelCreateOrUpdate(id);
           const messageCancel =
-            stateCommand === 'create' ? cancelCreate : cancelUpdate;
+            stateCommand[0] === 'create' ? cancelCreate : cancelUpdate;
           event.channel.send(messageCancel);
           break;
+        default:
+          stateCommand[0] === 'create'
+            ? setNewShortcutValue(event, message)
+            : console.log('EDIT');
       }
     }
     //Try update region if necessary

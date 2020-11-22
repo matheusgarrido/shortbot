@@ -41,16 +41,19 @@ async function setCurrentShortCut(
   idShortcut,
   state
 ) {
+  // console.log(onCreateOrUpdate);
   if (onCreateOrUpdate) {
     const guild = await guildModel.findByIdAndUpdate(
       { _id: idGuild },
-      { 'currentShortcut.id': idShortcut, 'currentShortcut.state': state }
+      { 'currentShortcut.id': idShortcut, 'currentShortcut.state': state },
+      { new: true }
     );
     guild.save();
   } else {
     const guild = await guildModel.findByIdAndUpdate(
       { _id: idGuild },
-      { currentShortcut: {} }
+      { currentShortcut: {} },
+      { new: true }
     );
     guild.save();
   }
