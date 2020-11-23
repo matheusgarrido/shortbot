@@ -1,4 +1,5 @@
-import * as guildService from '../service/guildService.js';
+import * as guildService from "../service/guildService.js";
+import * as contentService from "../service/contentService.js";
 
 async function reactMessage(client, event, user) {
   /*Continue:
@@ -13,21 +14,90 @@ async function reactMessage(client, event, user) {
     const emoji = event._emoji.name;
     const idGuild = event.message.channel.guild.id;
     const guild = await guildService.getGuild(idGuild);
-    console.log(guild);
-    console.log(emoji);
 
-    switch (emoji) {
-      case '1️⃣':
-        console.log('Alterar nome');
-        break;
-      case '2️⃣':
-        console.log('Alterar valor');
-        break;
-      case '❌':
-        console.log('Excluir atalho');
-        break;
+    const { id: idContent, state } = guild.currentShortcut;
+    const content = await contentService.getContentById(idContent);
+
+    //If content exists
+    if (content) {
+      //Delete menu
+      if (state === "update_delete") {
+        switch (emoji) {
+          //Abort delete
+          case "❌":
+            await guildService.setCurrentShortCut(idGuild, false);
+            channel.send("Exclusão cancelada");
+            break;
+          //Confirm delete
+          case "✅":
+            await guildService.setCurrentShortCut(idGuild, false);
+            await contentService.deleteContent(idContent);
+            channel.send("Atalho excluído!");
+            break;
+          //Another reaction
+          default:
+            channel.send(
+              "Reação inválida.\nSelecione uma das opções listadas no menu."
+            );
+            break;
+        }
+      }
+      //If started update or is in name/value update
+      else if (
+        state === "update_name" ||
+        state === "update_value" ||
+        state === "'update_selectoption'"
+      ) {
+        switch (emoji) {
+          //Update name
+          case "1️⃣":
+            await guildService.setCurrentShortCut(
+              idGuild,
+              true,
+              idContent,
+              "update_name"
+            );
+            channel.send("Atualizar nome");
+            break;
+          //Update value
+          case "2️⃣":
+            await guildService.setCurrentShortCut(
+              idGuild,
+              true,
+              idContent,
+              "update_value"
+            );
+            channel.send("Alterar valor");
+            break;
+          //Delete shortcut
+          case "❌":
+            await guildService.setCurrentShortCut(
+              idGuild,
+              true,
+              idContent,
+              "update_delete"
+            );
+            const messageSent = await channel.send(
+              "✅ to delete\n❌ to cancel delete"
+            );
+            messageSent.react("✅");
+            messageSent.react("❌");
+            break;
+          //Another reaction
+          default:
+            channel.send(
+              "Reação inválida.\nSelecione uma das opções listadas no menu."
+            );
+            break;
+        }
+      }
     }
-    channel.send(user.username + ' reagiu! ');
+    //Not found in guild.currentShortcut
+    else {
+      channel.send(
+        "O conteúdo não está mais disponível para alteração no momento.\nCaso deseje alterá-lo, digite ..update seguido do nome."
+      );
+    }
   }
 }
 
