@@ -21,6 +21,12 @@ const guildSchema = new Schema({
     id: {
       type: String,
     },
+    idMessage: {
+      type: String,
+    },
+    idChannel: {
+      type: String,
+    },
     state: {
       type: String,
     },

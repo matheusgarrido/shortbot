@@ -1,8 +1,8 @@
-import * as contentService from '../service/contentService.js';
-import * as messageService from '../service/messageService.js';
-import * as guildService from '../service/guildService.js';
+import * as contentService from "../service/contentService.js";
+import * as messageService from "../service/messageService.js";
+import * as guildService from "../service/guildService.js";
 
-async function startUpdate(event, message) {
+async function startUpdate(client, event, message) {
   const { id: idGuild, region } = event.guild;
   let language = await messageService.getMessagesByRegion(region);
   const {
@@ -18,18 +18,18 @@ async function startUpdate(event, message) {
   } = language.messages.crud;
 
   //Get name
-  const name = message.replace('update', '').trim();
+  const name = message.replace("update", "").trim();
 
   //If name is empty or not starts with letter
-  if (name === '' || !name.charAt(0).match(/^[a-z\u00E0-\u00FC]+$/i)) {
-    event.react('❌');
+  if (name === "" || !name.charAt(0).match(/^[a-z\u00E0-\u00FC]+$/i)) {
+    event.react("❌");
     event.channel.send(nameInvalid);
   }
   //If already exists a shortcut with same name on guild
   else {
     const content = await contentService.getContentByName(idGuild, name);
     if (content) {
-      event.react('✅');
+      event.react("✅");
       const { _id, name, value } = content;
       const jsonMessage = {
         embed: {
@@ -37,7 +37,7 @@ async function startUpdate(event, message) {
           title: shortcutFound,
           fields: [
             {
-              name: '..' + name.toUpperCase(),
+              name: ".." + name.toUpperCase(),
               value: value,
               inline: false,
             },
@@ -55,19 +55,22 @@ async function startUpdate(event, message) {
         },
       };
       const messageSent = await event.channel.send(jsonMessage);
-      messageSent.react('1️⃣');
-      messageSent.react('2️⃣');
-      messageSent.react('❌');
+      messageSent.react("1️⃣");
+      messageSent.react("2️⃣");
+      messageSent.react("❌");
       await guildService.setCurrentShortCut(
+        client,
         idGuild,
         true,
         content._id,
-        'update_selectoption'
+        messageSent.id,
+        messageSent.channel.id,
+        "update_selectoption"
       );
     }
     //If it's a shorcut with different name from others on guild
     else {
-      event.react('❌');
+      event.react("❌");
       event.channel.send(shortcutNotFound);
     }
   }
@@ -84,7 +87,7 @@ async function updateContent(event, message) {
   const { name, type } = content;
 }
 
-async function updateShortcutValue(event, message) {
+async function updateShortcutValue(client, event, message) {
   const { id: idGuild, region } = event.guild;
   let language = await messageService.getMessagesByRegion(region);
   const { invalidValue, createSuccess } = language.messages.crud;
@@ -97,14 +100,14 @@ async function updateShortcutValue(event, message) {
   const value = message.trim();
 
   //If value is empty
-  if (value === '') {
-    event.react('❌');
+  if (value === "") {
+    event.react("❌");
     event.channel.send(invalidValue);
   }
   //If it's a shorcut with different name from others on guild
   else {
-    event.react('✅');
-    await contentService.setValueById(id, value);
+    event.react("✅");
+    await contentService.setValueById(client, id, value);
     event.channel.send(`**__..${name}__** ${createSuccess}`);
   }
 }

@@ -1,5 +1,5 @@
-import guildModel from '../model/guildModel.js';
-import * as contentService from '../service/contentService.js';
+import guildModel from "../model/guildModel.js";
+import * as contentService from "../service/contentService.js";
 
 async function getGuild(guildId) {
   const guild = await guildModel.findById({ _id: guildId });
@@ -36,24 +36,49 @@ async function setRegion(guildId, region) {
 }
 
 async function setCurrentShortCut(
+  client,
   idGuild,
   onCreateOrUpdate,
   idShortcut,
+  idMessage,
+  idChannel,
   state
 ) {
+  let guild = {};
   // console.log(onCreateOrUpdate);
   if (onCreateOrUpdate) {
-    const guild = await guildModel.findByIdAndUpdate(
+    guild = await guildModel.findByIdAndUpdate(
       { _id: idGuild },
-      { 'currentShortcut.id': idShortcut, 'currentShortcut.state': state }
+      {
+        "currentShortcut.id": idShortcut,
+        "currentShortcut.idMessage": idMessage,
+        "currentShortcut.idChannel": idChannel,
+        "currentShortcut.state": state,
+      }
     );
-    guild.save();
-    return guild;
+  } else {
+    guild = await guildModel.findByIdAndUpdate(
+      { _id: idGuild },
+      { currentShortcut: {} }
+    );
   }
-  const guild = await guildModel.findByIdAndUpdate(
-    { _id: idGuild },
-    { currentShortcut: {} }
-  );
+  //Delete message
+  if (
+    Object.keys(guild.currentShortcut).length > 0 &&
+    guild.currentShortcut.idMessage !== null &&
+    guild.currentShortcut.idMessage !== undefined
+  ) {
+    try {
+      const fullMessage = await client.guilds.cache
+        .get(idGuild)
+        .channels.cache.get(idChannel)
+        .messages.cache.get(idMessage);
+      fullMessage.delete();
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  //Save changes
   guild.save();
   return guild;
 }

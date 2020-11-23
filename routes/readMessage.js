@@ -57,10 +57,10 @@ async function readMessage(client, event) {
           break;
         case "create":
           //Create a new shortcut
-          createCommand(event, message);
+          createCommand(client, event, message);
           break;
         case "update":
-          startUpdate(event, message);
+          startUpdate(client, event, message);
           //Update an exist shortcut or delete it
           break;
         case "cancel":
@@ -92,7 +92,11 @@ async function readMessage(client, event) {
           else event.channel.send(reserved);
           break;
         case "cancel":
-          const guild = await guildService.setCurrentShortCut(id, false);
+          const guild = await guildService.setCurrentShortCut(
+            client,
+            id,
+            false
+          );
           //Delete shortcut draft if is canceling in creation
           if (stateCommand[0] === "create") {
             event.channel.send(cancelCreate);

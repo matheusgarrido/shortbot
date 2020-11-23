@@ -15,22 +15,42 @@ async function reactMessage(client, event, user) {
     const idGuild = event.message.channel.guild.id;
     const guild = await guildService.getGuild(idGuild);
 
-    const { id: idContent, state } = guild.currentShortcut;
+    const { id: idContent, state, idMessage: message } = guild.currentShortcut;
     const content = await contentService.getContentById(idContent);
+
+    // console.log("=======GUILD=====");
+    // console.log(guild);
+    // console.log("=======CONTENT=====");
+    // console.log(content);
 
     //If content exists
     if (content) {
       //Delete menu
+      const idChannel = event.message.channel.id;
       if (state === "update_delete") {
         switch (emoji) {
           //Abort delete
           case "❌":
-            await guildService.setCurrentShortCut(idGuild, false);
+            await guildService.setCurrentShortCut(
+              client,
+              idGuild,
+              false,
+              idContent,
+              message,
+              idChannel
+            );
             channel.send("Exclusão cancelada");
             break;
           //Confirm delete
           case "✅":
-            await guildService.setCurrentShortCut(idGuild, false);
+            await guildService.setCurrentShortCut(
+              client,
+              idGuild,
+              false,
+              idContent,
+              message,
+              idChannel
+            );
             await contentService.deleteContent(idContent);
             channel.send("Atalho excluído!");
             break;
@@ -46,15 +66,18 @@ async function reactMessage(client, event, user) {
       else if (
         state === "update_name" ||
         state === "update_value" ||
-        state === "'update_selectoption'"
+        state === "update_selectoption"
       ) {
         switch (emoji) {
           //Update name
           case "1️⃣":
             await guildService.setCurrentShortCut(
+              client,
               idGuild,
               true,
               idContent,
+              message,
+              idChannel,
               "update_name"
             );
             channel.send("Atualizar nome");
@@ -62,9 +85,12 @@ async function reactMessage(client, event, user) {
           //Update value
           case "2️⃣":
             await guildService.setCurrentShortCut(
+              client,
               idGuild,
               true,
               idContent,
+              message,
+              idChannel,
               "update_value"
             );
             channel.send("Alterar valor");
@@ -72,9 +98,12 @@ async function reactMessage(client, event, user) {
           //Delete shortcut
           case "❌":
             await guildService.setCurrentShortCut(
+              client,
               idGuild,
               true,
               idContent,
+              message,
+              idChannel,
               "update_delete"
             );
             const messageSent = await channel.send(
