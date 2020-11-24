@@ -39,7 +39,11 @@ const json = {
       deleteCardText: ':x: para excluir o atalho',
       finishCardTitle: 'Concluir',
       finishCardText: ':white_check_mark: para sair das alterações',
-      confirmDelete: ':white_check_mark: to delete\n:x: to cancel delete',
+      confirmDeleteTitle: 'Confirmação de Exclusão',
+      confirmDeleteText:
+        ':white_check_mark: para excluir\n:x: para cancelar exclusão',
+      newName:
+        'Informe o novo comando para o atalho, **digitando __..__ antes do valor**',
     },
     content: {
       notFound: 'Nenhum atalho encontrado.',

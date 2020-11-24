@@ -101,7 +101,15 @@ const messageSchema = new Schema({
         type: String,
         required: true,
       },
-      confirmDelete: {
+      confirmDeleteTitle: {
+        type: String,
+        required: true,
+      },
+      confirmDeleteText: {
+        type: String,
+        required: true,
+      },
+      newName: {
         type: String,
         required: true,
       },

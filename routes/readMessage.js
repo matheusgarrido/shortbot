@@ -4,7 +4,7 @@ import * as contentService from '../service/contentService.js';
 import helpCommand from '../helper/helpCommand.js';
 import listCommand from '../helper/listCommand.js';
 import { createCommand, setNewShortcutValue } from '../helper/createCommand.js';
-import { startUpdate, updateShortcutValue } from '../helper/updateCommand.js';
+import { startUpdate } from '../helper/updateCommand.js';
 import executeShortcut from '../helper/executeShortcut.js';
 
 async function readMessage(client, event) {

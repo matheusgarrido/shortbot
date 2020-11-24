@@ -91,12 +91,24 @@ async function menuOptionUpdate(event, guild, client) {
   const { id: idContent } = guild.currentShortcut;
   const { region } = event.message.guild;
   let language = await messageService.getMessagesByRegion(region);
-  const { cancelUpdate, confirmDelete } = language.messages.crud;
+  const {
+    cancelUpdate,
+    createName,
+    confirmDeleteTitle,
+    confirmDeleteText,
+    newName,
+  } = language.messages.crud;
   let newMessage = '';
+  const jsonMessage = {
+    embed: {
+      color: 3447003,
+    },
+  };
   switch (emoji) {
     //Update name
     case '1️⃣':
-      newMessage = await channel.send('Atualizar nome');
+      jsonMessage.embed.title = newName;
+      newMessage = await channel.send(jsonMessage);
       await guildService.setCurrentShortCut(
         client,
         idGuild,
@@ -109,7 +121,8 @@ async function menuOptionUpdate(event, guild, client) {
       break;
     //Update value
     case '2️⃣':
-      newMessage = await channel.send('Atualizar valor');
+      jsonMessage.embed.title = createName;
+      newMessage = await channel.send(jsonMessage);
       await guildService.setCurrentShortCut(
         client,
         idGuild,
@@ -122,7 +135,15 @@ async function menuOptionUpdate(event, guild, client) {
       break;
     //Delete shortcut
     case '❌':
-      newMessage = await channel.send(confirmDelete);
+      jsonMessage.embed.title = confirmDeleteTitle;
+      jsonMessage.embed.fields = [
+        {
+          name: 'Selecione',
+          value: confirmDeleteText,
+          inline: false,
+        },
+      ];
+      newMessage = await channel.send(jsonMessage);
       await guildService.setCurrentShortCut(
         client,
         idGuild,
@@ -150,17 +171,6 @@ async function menuOptionUpdate(event, guild, client) {
   }
 }
 
-async function updateContent(event, message) {
-  const { id: idGuild, region } = event.guild;
-  let language = await messageService.getMessagesByRegion(region);
-  // const { invalidValue, createSuccess } = language.messages.crud;
-
-  const guild = await guildService.getGuild(idGuild);
-  const { id } = guild.currentShortcut;
-  const content = await contentService.getContentById(id);
-  const { name, type } = content;
-}
-
 async function updateShortcutValue(client, event, message) {
   const { id: idGuild, region } = event.guild;
   let language = await messageService.getMessagesByRegion(region);
@@ -186,4 +196,63 @@ async function updateShortcutValue(client, event, message) {
   }
 }
 
-export { startUpdate, menuOptionUpdate, updateShortcutValue };
+async function returnToUpdate(client, event, idContent) {
+  const { id: idGuild, region } = event.message.guild;
+  let language = await messageService.getMessagesByRegion(region);
+  const {
+    shortcutFound,
+    updateCardTitle,
+    updateCardText,
+    deleteCardTitle,
+    deleteCardText,
+    finishCardTitle,
+    finishCardText,
+  } = language.messages.crud;
+
+  const content = await contentService.getContentById(idContent);
+  const { name, value } = content;
+  const jsonMessage = {
+    embed: {
+      color: 3447003,
+      title: shortcutFound,
+      fields: [
+        {
+          name: '..' + name.toUpperCase(),
+          value: value,
+          inline: false,
+        },
+        {
+          name: updateCardTitle,
+          value: updateCardText,
+          inline: false,
+        },
+        {
+          name: deleteCardTitle,
+          value: deleteCardText,
+          inline: false,
+        },
+        {
+          name: finishCardTitle,
+          value: finishCardText,
+          inline: false,
+        },
+      ],
+    },
+  };
+  const messageSent = await event.message.channel.send(jsonMessage);
+  await guildService.setCurrentShortCut(
+    client,
+    idGuild,
+    true,
+    idContent,
+    messageSent.id,
+    messageSent.channel.id,
+    'update_selectoption'
+  );
+  messageSent.react('1️⃣');
+  messageSent.react('2️⃣');
+  messageSent.react('❌');
+  messageSent.react('✅');
+}
+
+export { startUpdate, menuOptionUpdate, updateShortcutValue, returnToUpdate };
