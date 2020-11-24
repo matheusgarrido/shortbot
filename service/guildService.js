@@ -1,5 +1,5 @@
-import guildModel from "../model/guildModel.js";
-import * as contentService from "../service/contentService.js";
+import guildModel from '../model/guildModel.js';
+import * as contentService from '../service/contentService.js';
 
 async function getGuild(guildId) {
   const guild = await guildModel.findById({ _id: guildId });
@@ -50,10 +50,10 @@ async function setCurrentShortCut(
     guild = await guildModel.findByIdAndUpdate(
       { _id: idGuild },
       {
-        "currentShortcut.id": idShortcut,
-        "currentShortcut.idMessage": idMessage,
-        "currentShortcut.idChannel": idChannel,
-        "currentShortcut.state": state,
+        'currentShortcut.id': idShortcut,
+        'currentShortcut.idMessage': idMessage,
+        'currentShortcut.idChannel': idChannel,
+        'currentShortcut.state': state,
       }
     );
   } else {
@@ -72,7 +72,7 @@ async function setCurrentShortCut(
       const fullMessage = await client.guilds.cache
         .get(idGuild)
         .channels.cache.get(idChannel)
-        .messages.cache.get(idMessage);
+        .messages.cache.get(guild.currentShortcut.idMessage);
       fullMessage.delete();
     } catch (err) {
       console.log(err);

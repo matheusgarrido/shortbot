@@ -93,6 +93,18 @@ const messageSchema = new Schema({
         type: String,
         required: true,
       },
+      finishCardTitle: {
+        type: String,
+        required: true,
+      },
+      finishCardText: {
+        type: String,
+        required: true,
+      },
+      confirmDelete: {
+        type: String,
+        required: true,
+      },
     },
     content: {
       type: Object,

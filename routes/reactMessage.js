@@ -1,5 +1,7 @@
-import * as guildService from "../service/guildService.js";
-import * as contentService from "../service/contentService.js";
+import * as guildService from '../service/guildService.js';
+import * as contentService from '../service/contentService.js';
+import deleteContent from '../helper/deleteCommand.js';
+import { menuOptionUpdate } from '../helper/updateCommand.js';
 
 async function reactMessage(client, event, user) {
   /*Continue:
@@ -27,104 +29,22 @@ async function reactMessage(client, event, user) {
     if (content) {
       //Delete menu
       const idChannel = event.message.channel.id;
-      if (state === "update_delete") {
-        switch (emoji) {
-          //Abort delete
-          case "❌":
-            await guildService.setCurrentShortCut(
-              client,
-              idGuild,
-              false,
-              idContent,
-              message,
-              idChannel
-            );
-            channel.send("Exclusão cancelada");
-            break;
-          //Confirm delete
-          case "✅":
-            await guildService.setCurrentShortCut(
-              client,
-              idGuild,
-              false,
-              idContent,
-              message,
-              idChannel
-            );
-            await contentService.deleteContent(idContent);
-            channel.send("Atalho excluído!");
-            break;
-          //Another reaction
-          default:
-            channel.send(
-              "Reação inválida.\nSelecione uma das opções listadas no menu."
-            );
-            break;
-        }
+      if (state === 'update_delete') {
+        deleteContent(event, guild, client);
       }
       //If started update or is in name/value update
       else if (
-        state === "update_name" ||
-        state === "update_value" ||
-        state === "update_selectoption"
+        state === 'update_name' ||
+        state === 'update_value' ||
+        state === 'update_selectoption'
       ) {
-        switch (emoji) {
-          //Update name
-          case "1️⃣":
-            await guildService.setCurrentShortCut(
-              client,
-              idGuild,
-              true,
-              idContent,
-              message,
-              idChannel,
-              "update_name"
-            );
-            channel.send("Atualizar nome");
-            break;
-          //Update value
-          case "2️⃣":
-            await guildService.setCurrentShortCut(
-              client,
-              idGuild,
-              true,
-              idContent,
-              message,
-              idChannel,
-              "update_value"
-            );
-            channel.send("Alterar valor");
-            break;
-          //Delete shortcut
-          case "❌":
-            await guildService.setCurrentShortCut(
-              client,
-              idGuild,
-              true,
-              idContent,
-              message,
-              idChannel,
-              "update_delete"
-            );
-            const messageSent = await channel.send(
-              "✅ to delete\n❌ to cancel delete"
-            );
-            messageSent.react("✅");
-            messageSent.react("❌");
-            break;
-          //Another reaction
-          default:
-            channel.send(
-              "Reação inválida.\nSelecione uma das opções listadas no menu."
-            );
-            break;
-        }
+        menuOptionUpdate(event, guild, client);
       }
     }
     //Not found in guild.currentShortcut
     else {
       channel.send(
-        "O conteúdo não está mais disponível para alteração no momento.\nCaso deseje alterá-lo, digite ..update seguido do nome."
+        'O conteúdo não está mais disponível para alteração no momento.\nCaso deseje alterá-lo, digite ..update seguido do nome.'
       );
     }
   }

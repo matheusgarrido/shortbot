@@ -30,14 +30,16 @@ const json = {
       invalidValue:
         'Informe um valor para o atalho (para cancelar a criação digite ..cancel)',
       createSuccess: 'criado com sucesso!',
-      shortcutFound:
-        'Atalho não encontrado.\nDigite ..list para visualizar a lista de atalhos.',
+      shortcutFound: 'Atalho encontrado',
       shortcutNotFound:
-        'Atalho não encontrado.\nDigite ..list para visualizar a lista de atalhos.',
+        'Atalho não encontrado\nDigite ..list para visualizar a lista de atalhos',
       updateCardTitle: 'Atualizar',
       updateCardText: ':one: para alterar nome\n:two: para alterar valor',
       deleteCardTitle: 'Excluir',
       deleteCardText: ':x: para excluir o atalho',
+      finishCardTitle: 'Concluir',
+      finishCardText: ':white_check_mark: para sair das alterações',
+      confirmDelete: ':white_check_mark: to delete\n:x: to cancel delete',
     },
     content: {
       notFound: 'Nenhum atalho encontrado.',
