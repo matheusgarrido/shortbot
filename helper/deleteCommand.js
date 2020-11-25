@@ -27,7 +27,7 @@ async function deleteContent(event, guild, client) {
     //Abort delete
     case '❌':
     default:
-      returnToUpdate(client, event, idContent);
+      returnToUpdate(client, idContent, event.message.guild, channel);
       break;
   }
 }

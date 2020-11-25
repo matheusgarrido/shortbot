@@ -5,19 +5,7 @@ import * as guildService from '../service/guildService.js';
 async function startUpdate(client, event, message) {
   const { id: idGuild, region } = event.guild;
   let language = await messageService.getMessagesByRegion(region);
-  const {
-    nameExisting,
-    nameInvalid,
-    createName,
-    shortcutFound,
-    shortcutNotFound,
-    updateCardTitle,
-    updateCardText,
-    deleteCardTitle,
-    deleteCardText,
-    finishCardTitle,
-    finishCardText,
-  } = language.messages.crud;
+  const { nameInvalid, shortcutNotFound } = language.messages.crud;
 
   //Get name
   const name = message.replace('update', '').trim();
@@ -32,56 +20,74 @@ async function startUpdate(client, event, message) {
     const content = await contentService.getContentByName(idGuild, name);
     if (content) {
       event.react('✅');
-      const { _id, name, value } = content;
-      const jsonMessage = {
-        embed: {
-          color: 3447003,
-          title: shortcutFound,
-          fields: [
-            {
-              name: '..' + name.toUpperCase(),
-              value: value,
-              inline: false,
-            },
-            {
-              name: updateCardTitle,
-              value: updateCardText,
-              inline: false,
-            },
-            {
-              name: deleteCardTitle,
-              value: deleteCardText,
-              inline: false,
-            },
-            {
-              name: finishCardTitle,
-              value: finishCardText,
-              inline: false,
-            },
-          ],
-        },
-      };
-      const messageSent = await event.channel.send(jsonMessage);
-      await guildService.setCurrentShortCut(
-        client,
-        idGuild,
-        true,
-        content._id,
-        messageSent.id,
-        messageSent.channel.id,
-        'update_selectoption'
-      );
-      messageSent.react('1️⃣');
-      messageSent.react('2️⃣');
-      messageSent.react('❌');
-      messageSent.react('✅');
+      returnToUpdate(client, content._id, event.guild, event.channel);
     }
-    //If it's a shorcut with different name from others on guild
+    //If shortcut wasn't found
     else {
       event.react('❌');
       event.channel.send(shortcutNotFound);
     }
   }
+}
+
+async function returnToUpdate(client, idContent, guild, channel) {
+  // async function returnToUpdate(client, event, idContent) {
+  const { id: idGuild, region } = guild;
+  let language = await messageService.getMessagesByRegion(region);
+  const {
+    shortcutFound,
+    updateCardTitle,
+    updateCardText,
+    deleteCardTitle,
+    deleteCardText,
+    finishCardTitle,
+    finishCardText,
+  } = language.messages.crud;
+
+  const content = await contentService.getContentById(idContent);
+  const { name, value } = content;
+  const jsonMessage = {
+    embed: {
+      color: 3447003,
+      title: shortcutFound,
+      fields: [
+        {
+          name: '..' + name.toUpperCase(),
+          value: value,
+          inline: false,
+        },
+        {
+          name: updateCardTitle,
+          value: updateCardText,
+          inline: false,
+        },
+        {
+          name: deleteCardTitle,
+          value: deleteCardText,
+          inline: false,
+        },
+        {
+          name: finishCardTitle,
+          value: finishCardText,
+          inline: false,
+        },
+      ],
+    },
+  };
+  const messageSent = await channel.send(jsonMessage);
+  await guildService.setCurrentShortCut(
+    client,
+    idGuild,
+    true,
+    idContent,
+    messageSent.id,
+    messageSent.channel.id,
+    'update_selectoption'
+  );
+  messageSent.react('1️⃣');
+  messageSent.react('2️⃣');
+  messageSent.react('❌');
+  messageSent.react('✅');
 }
 
 async function menuOptionUpdate(event, guild, client) {
@@ -194,65 +200,6 @@ async function updateShortcutValue(client, event, message) {
     await contentService.setValueById(client, id, value);
     event.channel.send(`**__..${name}__** ${createSuccess}`);
   }
-}
-
-async function returnToUpdate(client, event, idContent) {
-  const { id: idGuild, region } = event.message.guild;
-  let language = await messageService.getMessagesByRegion(region);
-  const {
-    shortcutFound,
-    updateCardTitle,
-    updateCardText,
-    deleteCardTitle,
-    deleteCardText,
-    finishCardTitle,
-    finishCardText,
-  } = language.messages.crud;
-
-  const content = await contentService.getContentById(idContent);
-  const { name, value } = content;
-  const jsonMessage = {
-    embed: {
-      color: 3447003,
-      title: shortcutFound,
-      fields: [
-        {
-          name: '..' + name.toUpperCase(),
-          value: value,
-          inline: false,
-        },
-        {
-          name: updateCardTitle,
-          value: updateCardText,
-          inline: false,
-        },
-        {
-          name: deleteCardTitle,
-          value: deleteCardText,
-          inline: false,
-        },
-        {
-          name: finishCardTitle,
-          value: finishCardText,
-          inline: false,
-        },
-      ],
-    },
-  };
-  const messageSent = await event.message.channel.send(jsonMessage);
-  await guildService.setCurrentShortCut(
-    client,
-    idGuild,
-    true,
-    idContent,
-    messageSent.id,
-    messageSent.channel.id,
-    'update_selectoption'
-  );
-  messageSent.react('1️⃣');
-  messageSent.react('2️⃣');
-  messageSent.react('❌');
-  messageSent.react('✅');
 }
 
 export { startUpdate, menuOptionUpdate, updateShortcutValue, returnToUpdate };
