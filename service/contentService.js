@@ -53,6 +53,12 @@ async function setValueById(client, id, value) {
   return content;
 }
 
+async function setNameById(client, id, name, idGuild) {
+  const content = await contentModel.findByIdAndUpdate(id, { name });
+  await guildService.setCurrentShortCut(client, content.idGuild, false);
+  return content;
+}
+
 async function createContent(client, idGuild, name) {
   const content = await contentModel.create({
     idGuild,
@@ -86,4 +92,5 @@ export {
   createContent,
   deleteContent,
   setValueById,
+  setNameById,
 };
