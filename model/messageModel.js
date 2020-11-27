@@ -69,6 +69,10 @@ const messageSchema = new Schema({
         type: String,
         required: true,
       },
+      updateSuccess: {
+        type: String,
+        required: true,
+      },
       shortcutFound: {
         type: String,
         required: true,
@@ -110,6 +114,18 @@ const messageSchema = new Schema({
         required: true,
       },
       newName: {
+        type: String,
+        required: true,
+      },
+      sameName: {
+        type: String,
+        required: true,
+      },
+      existingName: {
+        type: String,
+        required: true,
+      },
+      updateDescriptionCancel: {
         type: String,
         required: true,
       },
