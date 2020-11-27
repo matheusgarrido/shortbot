@@ -20,13 +20,11 @@ async function readMessage(client, event) {
   const guildData = await guildService.getGuild(id);
 
   let state = '_';
-  try {
-    state =
-      Object.keys(guildData.currentShortcut).length !== 0
-        ? guildData.currentShortcut.state
-        : '_';
-  } catch (err) {
-    console.log(err);
+  if (
+    guildData.currentShortcut !== null &&
+    guildData.currentShortcut !== undefined
+  ) {
+    state = guildData.currentShortcut.state;
   }
   const stateCommand = state.split('_');
   /* Do:
