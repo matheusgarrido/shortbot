@@ -1,5 +1,4 @@
 import guildModel from '../model/guildModel.js';
-import * as contentService from '../service/contentService.js';
 
 async function getGuild(guildId) {
   const guild = await guildModel.findById({ _id: guildId });
@@ -45,7 +44,6 @@ async function setCurrentShortCut(
   state
 ) {
   let guild = {};
-  // console.log(onCreateOrUpdate);
   if (onCreateOrUpdate) {
     guild = await guildModel.findByIdAndUpdate(
       { _id: idGuild },

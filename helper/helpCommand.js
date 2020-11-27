@@ -1,4 +1,4 @@
-import * as messageService from "../service/messageService.js";
+import * as messageService from '../service/messageService.js';
 
 async function helpCommand(event) {
   //Discover language to get messages in DB
@@ -7,17 +7,52 @@ async function helpCommand(event) {
 
   //Help guide messages
   const { title, description } = language.messages.help;
-  const { list, create, update, shortcutExample, shortcut } = description;
+  const {
+    list,
+    create,
+    update,
+    cancel,
+    shortcutExample,
+    shortcut,
+  } = description;
 
   //String to send
-  const messageToSend = `${title.toLocaleUpperCase()}
-:new: **'..create'** - ${create}
-:page_facing_up: **'..list'** -  ${list}
-:pencil: **'..update'** - ${update}
-:arrow_forward: **'..__${shortcutExample}__'** - ${shortcut}`;
+  const jsonMessage = {
+    embed: {
+      color: 3447003,
+      title: title.toLocaleUpperCase(),
+      fields: [
+        {
+          name: ":new: **'..create'**",
+          value: create,
+          inline: false,
+        },
+        {
+          name: ":page_facing_up: **'..list'**",
+          value: list,
+          inline: false,
+        },
+        {
+          name: ":pencil: **'..update'**",
+          value: update,
+          inline: false,
+        },
+        {
+          name: ":x: **'..cancel'**",
+          value: cancel,
+          inline: false,
+        },
+        {
+          name: `:arrow_forward: **'..__${shortcutExample}__'**`,
+          value: shortcut,
+          inline: false,
+        },
+      ],
+    },
+  };
 
   //Message sended
-  event.channel.send(messageToSend);
+  event.channel.send(jsonMessage);
 }
 
 export default helpCommand;

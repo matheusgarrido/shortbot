@@ -13,6 +13,9 @@ async function deleteContent(event, guild, client) {
   switch (emoji) {
     //Confirm delete
     case '✅':
+      const { region } = guild.region;
+      let language = await messageService.getMessagesByRegion(region);
+      const { deleteSuccess } = language.messages.crud;
       await guildService.setCurrentShortCut(
         client,
         idGuild,
@@ -22,7 +25,7 @@ async function deleteContent(event, guild, client) {
         idChannel
       );
       await contentService.deleteContent(idContent);
-      channel.send('Atalho excluído!');
+      channel.send(deleteSuccess);
       break;
     //Abort delete
     case '❌':

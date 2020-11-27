@@ -31,6 +31,7 @@ const json = {
         'Informe um valor para o atalho (para cancelar a criação digite ..cancel)',
       createSuccess: 'criado com sucesso!',
       updateSuccess: 'atualizado com sucesso!',
+      deleteSuccess: 'Atalho excluído!',
       shortcutFound: 'Atalho encontrado',
       shortcutNotFound:
         'Atalho não encontrado\nDigite ..list para visualizar a lista de atalhos',
@@ -48,6 +49,8 @@ const json = {
         'Informe o novo comando para o atalho, **digitando __..__ antes do valor**',
       sameName: 'O nome informado é o mesmo nome que está no momento.',
       updateDescriptionCancel: 'Aperte 🛑 para cancelar a atualização',
+      invalidReactionTitle: 'O conteúdo disponível para alteração no momento.',
+      invalidReactionText: 'Para obter mais ajuda, digite ..help',
     },
     content: {
       notFound: 'Nenhum atalho encontrado.',
@@ -63,10 +66,17 @@ const json = {
         list: 'Lista todos os atalhos criados pelos usuários do servidor.',
         create: 'Cria um novo atalho.',
         update: 'Gerenciamento de atalho (atualização ou exclusão).',
+        cancel: 'Cancela uma criação ou atualização de atalho.',
         shortcutExample: 'nome do atalho',
         shortcut:
           'Basta substituir a frase destacada pelo nome do atalho para usá-lo.',
       },
+    },
+    join: {
+      firstIn:
+        'Obrigado por me convidar ao grupo! :grin:\nPara aprender um pouco mais dos meus comandos, digite **..help**.',
+      notFirstIn:
+        'Obrigado por me adicionar de volta! \nSeus atalhos ainda estão salvos, digite **..list** para exibi-los.',
     },
   },
 };

@@ -73,6 +73,10 @@ const messageSchema = new Schema({
         type: String,
         required: true,
       },
+      deleteSuccess: {
+        type: String,
+        required: true,
+      },
       shortcutFound: {
         type: String,
         required: true,
@@ -129,6 +133,14 @@ const messageSchema = new Schema({
         type: String,
         required: true,
       },
+      invalidReactionTitle: {
+        type: String,
+        required: true,
+      },
+      invalidReactionText: {
+        type: String,
+        required: true,
+      },
     },
     content: {
       type: Object,
@@ -171,6 +183,10 @@ const messageSchema = new Schema({
           type: String,
           required: true,
         },
+        cancel: {
+          type: String,
+          required: true,
+        },
         shortcutExample: {
           type: String,
           required: true,
@@ -179,6 +195,17 @@ const messageSchema = new Schema({
           type: String,
           required: true,
         },
+      },
+    },
+    join: {
+      type: Object,
+      firstIn: {
+        type: String,
+        required: true,
+      },
+      notFirstIn: {
+        type: String,
+        required: true,
       },
     },
   },
