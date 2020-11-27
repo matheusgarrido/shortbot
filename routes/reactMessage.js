@@ -1,13 +1,14 @@
 import * as guildService from '../service/guildService.js';
 import * as contentService from '../service/contentService.js';
 import deleteContent from '../helper/deleteCommand.js';
-import { menuOptionUpdate } from '../helper/updateCommand.js';
+import { menuOptionUpdate, cancelUpdate } from '../helper/updateCommand.js';
 
 async function reactMessage(client, event, user) {
   /*Continue:
   If the message is from the shortbot
   And if the reaction is not from the shortbot
   */
+  console.log(event.message.id);
   if (
     event.message.author.id === client.user.id &&
     client.user.id !== user.id
@@ -19,33 +20,39 @@ async function reactMessage(client, event, user) {
 
     const { id: idContent, state, idMessage: message } = guild.currentShortcut;
     const content = await contentService.getContentById(idContent);
-
-    // console.log("=======GUILD=====");
-    // console.log(guild);
-    // console.log("=======CONTENT=====");
-    // console.log(content);
-
-    //If content exists
-    if (content) {
+    /*Do:
+    If content exists
+    If the message is the current state*/
+    if (content && message === event.message.id) {
       //Delete menu
-      const idChannel = event.message.channel.id;
       if (state === 'update_delete') {
         deleteContent(event, guild, client);
       }
-      //If started update or is in name/value update
-      else if (
-        state === 'update_name' ||
-        state === 'update_value' ||
-        state === 'update_selectoption'
-      ) {
+      //If is in menu update to select option
+      else if (state === 'update_selectoption') {
         menuOptionUpdate(event, guild, client);
+      }
+      //If is in name/value update
+      else if (state === 'update_name' || state === 'update_value') {
+        cancelUpdate(client, event.message.channel, emoji);
       }
     }
     //Not found in guild.currentShortcut
     else {
-      channel.send(
-        'O conteúdo não está mais disponível para alteração no momento.\nCaso deseje alterá-lo, digite ..update seguido do nome.'
-      );
+      const { region } = event.message.channel.guild;
+      let language = await messageService.getMessagesByRegion(region);
+      const {
+        invalidReactionTitle,
+        invalidReactionText,
+      } = language.messages.crud;
+      const jsonMessage = {
+        embed: {
+          color: 3447003,
+          title: invalidReactionTitle,
+          description: invalidReactionText,
+        },
+      };
+      channel.send(jsonMessage);
     }
   }
 }

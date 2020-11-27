@@ -128,6 +128,7 @@ async function menuOptionUpdate(event, guild, client) {
         newMessage.channel.id,
         'update_name'
       );
+      newMessage.react('◀️');
       newMessage.react('🛑');
       break;
     //Update value
@@ -144,6 +145,7 @@ async function menuOptionUpdate(event, guild, client) {
         newMessage.channel.id,
         'update_value'
       );
+      newMessage.react('◀️');
       newMessage.react('🛑');
       break;
     //Delete shortcut
@@ -151,7 +153,7 @@ async function menuOptionUpdate(event, guild, client) {
       jsonMessage.embed.title = confirmDeleteTitle;
       jsonMessage.embed.fields = [
         {
-          name: 'Selecione',
+          name: confirmDeleteTitle,
           value: confirmDeleteText,
           inline: false,
         },
@@ -222,7 +224,17 @@ async function updateShortcutName(client, event, message) {
     } catch (err) {
       event.react('✅');
       await contentService.setNameById(client, id, newName, idGuild);
-      event.channel.send(`**__..${name}__** ${updateSuccess}`);
+      event.channel.send(
+        `${updateSuccess.charAt(0).toUpperCase() + updateSuccess.slice(1)}`
+      );
+      await guildService.setCurrentShortCut(
+        client,
+        idGuild,
+        false,
+        null,
+        null,
+        event.channel.id
+      );
       returnToUpdate(client, id, event.channel.guild, event.channel);
     }
   }
@@ -250,8 +262,39 @@ async function updateShortcutValue(client, event, message) {
   else {
     event.react('✅');
     await contentService.setValueById(client, id, value);
+    await guildService.setCurrentShortCut(
+      client,
+      idGuild,
+      false,
+      null,
+      null,
+      event.channel.id
+    );
     event.channel.send(`**__..${name}__** ${updateSuccess}`);
     returnToUpdate(client, id, event.channel.guild, event.channel);
+  }
+}
+
+//Cancel update closing the update method or returning to the update menu
+async function cancelUpdate(client, channel, emoji) {
+  const { id: idGuild, region } = channel.guild;
+  //Cancel update
+  if (emoji === '🛑') {
+    let language = await messageService.getMessagesByRegion(region);
+    const { cancelUpdate } = language.messages.crud;
+    await guildService.setCurrentShortCut(
+      client,
+      idGuild,
+      false,
+      null,
+      null,
+      channel.id
+    );
+    channel.send(cancelUpdate);
+  }
+  //Return to update menu
+  else {
+    returnToUpdate(client, guild.currentShortcut.id, channel.guild, channel);
   }
 }
 
@@ -261,4 +304,5 @@ export {
   updateShortcutValue,
   updateShortcutName,
   returnToUpdate,
+  cancelUpdate,
 };
