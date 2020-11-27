@@ -6,7 +6,11 @@ async function getGuild(guildId) {
 }
 
 async function setJoined(guildId, region) {
-  const guild = await guildModel.create({ _id: guildId, region: region });
+  const guild = await guildModel.create({
+    _id: guildId,
+    region: region,
+    currentShortcut: {},
+  });
   guild.save();
 }
 
