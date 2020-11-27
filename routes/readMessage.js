@@ -18,10 +18,16 @@ async function readMessage(client, event) {
   const { id, region } = event.guild;
 
   const guildData = await guildService.getGuild(id);
-  const state =
-    Object.keys(guildData.currentShortcut).length !== 0
-      ? guildData.currentShortcut.state
-      : '_';
+
+  let state = '_';
+  try {
+    state =
+      Object.keys(guildData.currentShortcut).length !== 0
+        ? guildData.currentShortcut.state
+        : '_';
+  } catch (err) {
+    console.log(err);
+  }
   const stateCommand = state.split('_');
   /* Do:
     If has content after the prefix
