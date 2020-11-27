@@ -5,8 +5,6 @@ import joinedServer from './routes/joinedGuild.js';
 import ejectedServer from './routes/ejectedGuild.js';
 import reactMessage from './routes/reactMessage.js';
 
-// import * as messageService from './service/messageService.js';
-
 //Configs
 dotenv.config();
 
@@ -22,7 +20,6 @@ client.on('ready', () => {
   client.user.setActivity('"..help" for support', {
     type: 'PLAYING',
   });
-  // messageService.setMessages();
   /*
   EVENT DATA
     id: '722159579215036458',

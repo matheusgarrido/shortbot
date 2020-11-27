@@ -1,5 +1,6 @@
 import * as guildService from '../service/guildService.js';
 import * as contentService from '../service/contentService.js';
+import * as messageService from '../service/messageService.js';
 import deleteContent from '../helper/deleteCommand.js';
 import { menuOptionUpdate, cancelUpdate } from '../helper/updateCommand.js';
 

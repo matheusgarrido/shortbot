@@ -1,4 +1,5 @@
 import * as guildService from '../service/guildService.js';
+import * as messageService from '../service/messageService.js';
 
 async function joinedGuild(client, event) {
   //Data from welcome channel
