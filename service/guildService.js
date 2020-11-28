@@ -66,11 +66,7 @@ async function setCurrentShortCut(
   }
   //Delete message
   try {
-    if (
-      Object.keys(guild.currentShortcut).length > 0 &&
-      guild.currentShortcut.idMessage !== null &&
-      guild.currentShortcut.idMessage !== undefined
-    ) {
+    if (Object.keys(guild.currentShortcut).length > 0) {
       const fullMessage = await client.guilds.cache
         .get(idGuild)
         .channels.cache.get(idChannel)
@@ -87,7 +83,11 @@ async function setCurrentShortCut(
 
 async function isOnCreateOrUpdate(idGuild) {
   const guild = await guildModel.findById(idGuild);
-  if (guild.currentShortcut && guild.currentShortcut.id) return true;
+  try {
+    if (guild.currentShortcut && guild.currentShortcut.id) return true;
+  } catch (err) {
+    console.log(err);
+  }
   return false;
 }
 
