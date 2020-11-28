@@ -65,20 +65,20 @@ async function setCurrentShortCut(
     );
   }
   //Delete message
-  if (
-    Object.keys(guild.currentShortcut).length > 0 &&
-    guild.currentShortcut.idMessage !== null &&
-    guild.currentShortcut.idMessage !== undefined
-  ) {
-    try {
+  try {
+    if (
+      Object.keys(guild.currentShortcut).length > 0 &&
+      guild.currentShortcut.idMessage !== null &&
+      guild.currentShortcut.idMessage !== undefined
+    ) {
       const fullMessage = await client.guilds.cache
         .get(idGuild)
         .channels.cache.get(idChannel)
         .messages.cache.get(guild.currentShortcut.idMessage);
       fullMessage.delete();
-    } catch (err) {
-      console.log(err);
     }
+  } catch (err) {
+    console.log(err);
   }
   //Save changes
   guild.save();
